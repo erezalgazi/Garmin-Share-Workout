@@ -8,38 +8,63 @@
   </head>
   
   <body>
-
-
- 
-    <div class="row">
-        <button id="save-html" disabled="disable">Download</button>
-        <div id="dl"></div>
-    </div><br>
-
-    <input type="file" id="fileinput"/><br>
-<!--     <script type="text/javascript">
-      function Redirect() {
-               window.location="http://www.tutorialspoint.com";
-            }
-
-    </script>
- -->    <input type='button' id='btnLoad' value='Load' disabled="disable">
-
-<!--        <ul>
-         <li>1</li>
-         <li>2</li>
-         <li>3</li>
-         <li>3</li>
-         <li>4</li>
-         <li>4</li>
-         <li>4</li>
-         <li>4</li>
-       </ul>
+    <input type="file" id="fileinput"/>
+    <!-- <input type='button' id='btnLoad' value='Get Workout'> -->
+    <button id="btnShare">Share Workout</button>
+    <button id="btnLoad">Get Workout</button> 
+    <div id="alerts-div">
+      <img id="loading" src="https://healthy.kaiserpermanente.org/consumernet/themes/html/consumernet/js/gensys-click2chat/img/ajax-loader.gif">
+      <h3 id="redirecting">Redirecting...Please wait</h3>
+      <h3 id="not-logged-in-error">You are not logged in to your Garmin account. Please <a href="#" id="redirect-to-login">log in</a> and repeat the process.</h3>
+      <h3 id="more-than2-not-yet-supported">This type of workout (more than 2 steps inside a repeat) is not yet supported.</h3>
+      <h3 id="only-running">This type of workout can't be shared. Currently only running workouts are supported.</h3>
+      <h3 id="general-error">Looks like Garmin website is experiencing connectivity problems. Please try agian later.</h3>
+      <h3 id="only-json">Only files type ".json" are supported in this extension.</h3>
+      <h3 id="download-success">Workout downloaded successfully!</h3>
+    </div>
+    <div id="dl"></div>
+    <h1>Welcome to Garmin Workout Share extension</h1> 
+    <h2>How to:</h2> 
+    <ul class="instruction-wrap">
+      <ol class="instruction-container">
+        <a href = "#" class="share-get"><h3 id="shareWorkout">Share a Workout</h3></a>
+        <span id = "shareInstructions">
+          <!-- <br><br>           -->
+          <span>If you are a Garmin user who wants to share a workout with other users, follow these steps:</span>
+           <!-- <br> -->
+           <!-- <br> -->
+          <hr>
+           <!-- <br> -->
+          <li>Go to your <a href="https://connect.garmin.com/modern/workouts" id="goto-workouts">Garmin Workouts</a> page. Make sure you are logged in to your account.</li>
+          <li>Select the workout that you would like to share, and re-open the extension popup window. The "Share Workout" button has become visible.</li>
+          <li>When you click this button, a file (type .json) will be downloaded to your system. Now you can share your workout by sending this file (via Mail, Facebook, WhatsApp etc.) to your friends who are interested in your workout.</li>
+        </span>
+      </ol>
+      <ol class="instruction-container">
+        <a href="#" class="share-get"><h3 id="getWorkout">Get a Workout</h3></a>
+        <span id = "getInstructions">
+        <!-- <br><br> -->
+          <span>If you are a Garmin user who wants to get someone else's workout, follow these steps:</span> 
+         <!-- <br> -->
+         <!-- <br> -->
+          <hr>
+         <!-- <br> -->
+          <li>Open the "Choose File" dialog at the top of the extension window, and choose the workout file that was sent to you.</li>
+          <li>The "Get Workout" button has become visible.</li>
+          <li>When you click this button, you will be redirected to the Garmin website. If you are not logged in to your Garmin account, you will be asked to log in and repeat the process.</li>
+          <li>If you are logged in, the workout will be saved to your account in a few seconds.</li>
+        </span>
+      </ol>
+    </ul>
+    
+<!--            <li>Currently the extension supports only running workouts</li>
+           <li>Currently the extension supports repeats with no more than 2 steps inside them</li>   
  -->
-
     <script src="jquery-2.2.4.js"></script>
     <!-- <script src="../node_modules/jquery/dist/jquery.min.js"></script> -->
     <script src="popup.js"></script>
+    <!-- <script src="background.js"></script> -->
+
   </body>
 
 </html>

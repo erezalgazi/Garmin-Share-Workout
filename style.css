@@ -1,69 +1,159 @@
 body{
-	width: 320px;
-	height: 120px;
-	background: url(https://miiinitiatives.files.wordpress.com/2013/04/running-marathon.jpg) no-repeat center fixed ;
-  background-size: cover
+	width: 600px;
+	/*height: 620px;*/
+	/*background: url(https://miiinitiatives.files.wordpress.com/2013/04/running-marathon.jpg) no-repeat center fixed ;*/
+  /*background-size: cover;*/
+  /*background-color: #DEEEFC;*/
+  position: relative;
+  /*background-color: #CCCCFB;*/
+  /*background-color: #91A8D0;*/
+  /*background-color: #D3DCEC;*/
+  background-color: #BDCBE3;
+}
+
+body:after {
+  content: "";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-image: url(https://miiinitiatives.files.wordpress.com/2013/04/running-marathon.jpg);
+  width: 100%;
+  height: 100%;
+  /*bottom: 0;*/
+  /*right: 0;*/
+  opacity: 0.14;
+  z-index: -1;   
+  background-repeat: no-repeat;
+  background-position:  0% 12%;
+  background-size: cover;
+  /*background-color: red;*/
 }
 
 div{
 	width: 100%;
 }
 
-/*#inputSong{
-	vertical-align:middle;
-	display:inline-block;
-	width: 65%;
-}
-*/
-
-#save-html{
+#btnShare, #btnLoad{
 	height: 30px;		
 	font-family: 'Ubuntu', sans-serif;
-	display:inline-block;
+	/*display:inline-block;*/
+	display: none;
 	width: 30%;
 	background-color:#5B74A8;
 	font-size: 14px;
 	border-radius: 2px;
 	color: #fff;
 	cursor: pointer;
+	margin-bottom: -35px;
+	margin-top: 5px;
+
+
 	/*pointer-events: none;*/
   /*cursor: default;*/
 }
-#save-html:disabled {
+/*
+#buttons-div {
+	margin-top: 5px;
+	margin-bottom: -50px;
+}
+*/
+h1{
+	margin-top: 60px;
+	text-align: center;
+	margin-bottom: -10px;
+}
+
+/*#btnShare, #btnLoad:disabled {
     background: #999;
     color: #555;
     cursor: default;
 }
-
-#fileinput{
-	display:block;
+*/
+/*#fileinput{
+	display: block;
 	font-family: 'Ubuntu', sans-serif;
 	color: blue;
-/*	background-color: white;
-	opacity: 0.5;*/
+	background-color: white;
+	opacity: 0.5;
 	background-color: rgba(255, 255, 255, 0.8);
 	font-size: 14px;
 }
+*/
+.instruction-container {
+	display: inline-block;
+	width: 48%;
+	padding-left: 5px;
+	padding-right: 5px;
+	margin-top: -30px;
+	border: 5px solid transparent;
+	box-sizing: border-box;
+	vertical-align: top;
+}
+
+.instruction-wrap {
+	/*overflow: hidden;*/
+}
 
 
-#btnLoad {
+
+#shareInstructions, #getInstructions {
+	max-width: 289px;
+	display: none;
+	/*margin-top: -35px;*/
+}
+
+.share-get {
+	text-align: center;
+}
+
+/*#btnLoad {
 	display:inline-block;
 	font-family: 'Ubuntu', sans-serif;
 	font-size: 14px;
 }
+*/
+li 	{
+	font-family: 'Ubuntu', sans-serif;
+	font-size: 1.18em;
+	line-height: 170%;
+}
 
-#btnLoad:disabled {
-    background: #999;
-    color: #555;
-    cursor: default;
+#dl{
+	display: none;
 }
 
 
-
-
-
-#dl{
-
+#loading {
+	height: 7%;
+	width: 7%;
 	display: none;
+	margin-top: 10px;
+	margin-bottom: -15px; 
+}
 
+#redirecting {
+	color: red;
+	display: none;
+	margin-top: 10px;
+	margin-left: 7px;
+	margin-bottom: -5px;	
+}
+
+#more-than2-not-yet-supported, #not-logged-in-error, #only-running, #general-error, #only-json {
+	color: red;
+	display: none;
+	margin: 0px;
+}
+
+#download-success {
+	color: green;
+	display: none;
+	margin: 0px;
+}
+
+#alerts-div {
+	/*display: block;*/
+	/*margin-top: -5px;*/
+	/*margin-bottom: -35px;*/
 }
