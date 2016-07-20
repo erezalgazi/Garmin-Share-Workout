@@ -35,7 +35,7 @@ function createWorkout(e) {
     for (var j=0; j<3; j++) {
       document.getElementsByClassName('step-delete')[0].click();
     }
-    for(var i=0; i<(workoutFlow.length-1); i++) {
+    for(var i=0; i<(workoutFlow.length-2); i++) {
       if (workoutFlow[i].repeat === 1) {
         document.getElementById('new-step').click();
         document.getElementsByClassName('select-step-type')[(document.getElementsByClassName('select-step-type').length-1)].value = workoutFlow[i].steps[0].stepType;
@@ -53,6 +53,12 @@ function createWorkout(e) {
           hr[hr.length-1].classList.add('dur-hr-' + (hr.length-1));
           document.getElementsByClassName('dur-hr-'+(hr.length-1))[0].value = workoutFlow[i].steps[0].stepDuration.durationVal;
           document.getElementsByName('heart-rate-select')[hr.length-1].value = workoutFlow[i].steps[0].stepDuration.durationUnits;
+        }
+        else if (workoutFlow[i].steps[0].stepDuration.durationType === 'power.zone') {
+          var power = document.querySelectorAll('*[id^="duration-power-001"]');
+          power[power.length-1].classList.add('dur-power-' + (power.length-1));
+          document.getElementsByClassName('dur-power-'+(power.length-1))[0].value = workoutFlow[i].steps[0].stepDuration.durationVal;
+          document.getElementsByName('power-zone-select')[power.length-1].value = workoutFlow[i].steps[0].stepDuration.durationUnits;
         }
         else if (workoutFlow[i].steps[0].stepDuration.durationType === 'time') {
           var time = document.querySelectorAll('*[id^="duration-time-001"]');
@@ -92,6 +98,12 @@ function createWorkout(e) {
               document.getElementsByClassName('dur-hr-' + (hr.length-(stepsLen-y)))[0].value = workoutFlow[i].steps[y].stepDuration.durationVal;
               document.getElementsByName('heart-rate-select')[hr.length-(stepsLen-y)].value = workoutFlow[i].steps[y].stepDuration.durationUnits;
             }
+            else if (workoutFlow[i].steps[y].stepDuration.durationType === 'power.zone') {
+              var power = document.querySelectorAll('*[id^="duration-power-001"]');
+              power[power.length-1].classList.add('dur-power-' + (power.length-(stepsLen-y)));
+              document.getElementsByClassName('dur-power-' + (power.length-(stepsLen-y)))[0].value = workoutFlow[i].steps[y].stepDuration.durationVal;
+              document.getElementsByName('power-zone-select')[power.length-(stepsLen-y)].value = workoutFlow[i].steps[y].stepDuration.durationUnits;
+            }
             else if (workoutFlow[i].steps[y].stepDuration.durationType === 'time') {
               var time = document.querySelectorAll('*[id^="duration-time-001"]');
               time[time.length-(stepsLen-y)].classList.add('dur-time-' + (time.length-(stepsLen-y)));
@@ -118,7 +130,7 @@ function createWorkout(e) {
             // console.log('1');
             if (document.getElementsByClassName('inline-edit-trigger')) {
               document.getElementsByClassName('inline-edit-trigger')[0].click();
-              document.getElementsByClassName('inline-edit-editable-text')[0].innerHTML = workoutFlow[workoutFlow.length-1].workoutName;
+              document.getElementsByClassName('inline-edit-editable-text')[0].innerHTML = workoutFlow[workoutFlow.length-2].workoutName;
               document.getElementsByClassName('inline-edit-save')[0].click()
             }
             document.getElementById('save-and-review').click();
@@ -136,7 +148,7 @@ function createWorkout(e) {
           // console.log('2');
           if (document.getElementsByClassName('inline-edit-trigger')) {
             document.getElementsByClassName('inline-edit-trigger')[0].click();
-            document.getElementsByClassName('inline-edit-editable-text')[0].innerHTML = workoutFlow[workoutFlow.length-1].workoutName;
+            document.getElementsByClassName('inline-edit-editable-text')[0].innerHTML = workoutFlow[workoutFlow.length-2].workoutName;
             document.getElementsByClassName('inline-edit-save')[0].click()
           }
           document.getElementById('save-and-review').click();
@@ -174,17 +186,8 @@ function createWorkout(e) {
     pageLoadedIndicator = true;
     // console.log(document.getElementsByClassName('icon-pencil')[0]);
   }
-
-  // if (e.target.className==='inline-edit inline-edit-text-field') {
-    // console.log('noooo');
-    // document.body.removeEventListener('DOMNodeInserted', createWorkout);
-    // setTimeout(function() {
-      // document.getElementsByClassName('inline-edit-trigger')[0].click();
-      // document.getElementsByClassName('inline-edit-editable-text')[0].innerHTML = workoutFlow[workoutFlow.length-1].workoutName;
-      // document.getElementsByClassName('inline-edit-save')[0].click();
-    // }, 50);
-  // }
 };
+
 setTimeout(function(){
   // console.log(pageLoadedIndicator);
   if ((pageLoadedIndicator === false) && (!((document.URL.substring(0 ,42) === "https://connect.garmin.com/modern/workout/") && (!(isNaN(Number(document.URL.substring(42,43)))))))) {
