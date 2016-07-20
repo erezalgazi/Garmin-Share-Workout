@@ -2,6 +2,7 @@
 var workoutFlowArray = [];
 var workoutFlow;
 
+//this event handles the file loading and its content (data in the json file)
 document.getElementById('fileinput').addEventListener('change', function () {
   var file = document.getElementById('fileinput').files[0];
   // console.log(file);
@@ -38,6 +39,7 @@ document.getElementById('fileinput').addEventListener('change', function () {
   }
 });
 
+//this event simply redirects when the go to workout link on the explanations is clicked
 document.getElementById('goto-workouts').addEventListener('click', function(){
   chrome.tabs.getSelected(null, function(tab) {
     // console.log(tab);
@@ -51,23 +53,32 @@ document.getElementById('goto-workouts').addEventListener('click', function(){
   });
 });
 
+//this events shows the share button when on a legitimate workout, and extract all the data from this workout to be put in a file
 chrome.tabs.query({active: true, windowId: chrome.windows.WINDOW_ID_CURRENT}, function(tabs) {
   if ((tabs[0].url.substring(0 ,42) === "https://connect.garmin.com/modern/workout/") && (!(isNaN(Number(tabs[0].url.substring(42,43)))))) {
     // document.getElementById('btnShare').disabled = false;
     document.getElementById('btnShare').style.display = "block";
-    var onlyRunning = "var workoutTypes = []; workoutTypes.push(document.getElementsByClassName('icon-activity-running')[0]); workoutTypes.push(document.getElementsByClassName('icon-activity-cycling')[0]); workoutTypes";
-    chrome.tabs.executeScript(null, {code: onlyRunning}, function(types) {
-      // console.log(types);
-      if (types[0][0] === null) {
+    // var onlyRunning = "var workoutTypes = []; workoutTypes.push(document.getElementsByClassName('icon-activity-running')[0]); workoutTypes.push(document.getElementsByClassName('icon-activity-cycling')[0]); workoutTypes";
+    // chrome.tabs.executeScript(null, {code: onlyRunning}, function(types) {
+    //   // console.log(types);
+    //   if (types[0][0] === null) {
+    //     document.getElementById('btnShare').style.display = "none";
+    //     document.getElementById('only-running').style.display = 'block';
+    //     document.getElementById('alerts-div').style.margin = '5px 0px -25px';
+    //   }
+    // });
+    var workoutHackCode = "var data = []; data.push(document.getElementsByClassName('workout-summary')[0].innerHTML); ";
+    workoutHackCode += "for (var k=0; k<document.getElementsByClassName('block-repeat').length; k++) {data.push(document.getElementsByClassName('block-repeat')[k].innerHTML);} ";
+    workoutHackCode += "data.push(document.getElementsByClassName('inline-edit-target')[0].innerHTML); ";
+    workoutHackCode += "var workoutTypes = []; workoutTypes.push(document.getElementsByClassName('icon-activity-running')[0]); workoutTypes.push(document.getElementsByClassName('icon-activity-cycling')[0]); ";
+    workoutHackCode += "data.push(workoutTypes); data";
+    chrome.tabs.executeScript(null, {code: workoutHackCode}, function(results) {
+      // console.log(results);
+      if ((results[0][results[0].length-1][0] === null) && (results[0][results[0].length-1][1] === null)) {
         document.getElementById('btnShare').style.display = "none";
         document.getElementById('only-running').style.display = 'block';
-        document.getElementById('alerts-div').style.margin = '5px 0px -25px';
+        document.getElementById('alerts-div').style.margin = '5px 0px -25px';        
       }
-    });
-    var workoutHackCode = "var data = []; data.push(document.getElementsByClassName('workout-summary')[0].innerHTML); ";
-    workoutHackCode += "for (var k=0; k<document.getElementsByClassName('block-repeat').length; k++) {data.push(document.getElementsByClassName('block-repeat')[k].innerHTML);}";
-    workoutHackCode += "data.push(document.getElementsByClassName('inline-edit-target')[0].innerHTML); data";
-    chrome.tabs.executeScript(null, {code: workoutHackCode}, function(results) {
       arrrangeWorkout(results[0]);
     });
   }
@@ -76,56 +87,15 @@ chrome.tabs.query({active: true, windowId: chrome.windows.WINDOW_ID_CURRENT}, fu
 $('body').on('click', '#btnShare', function() {
   var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(workoutFlowArray)); 
   // console.log(data);
-  $('<a href="data:' + data + '" download = "' + workoutFlowArray[workoutFlowArray.length-1].workoutName + '.json" id="dl-id">download JSON</a>').appendTo('#dl');
+  $('<a href="data:' + data + '" download = "' + workoutFlowArray[workoutFlowArray.length-2].workoutName + '.json" id="dl-id">download JSON</a>').appendTo('#dl');
   document.getElementById('dl-id').click();
   document.getElementById('btnShare').style.display = 'none';
-  document.getElementById('download-success').style.display = 'block';
-  document.getElementById('alerts-div').style.margin = "5px 0px -25px";
+  setTimeout(function(){
+    document.getElementById('download-success').style.display = 'block';
+    document.getElementById('alerts-div').style.margin = "5px 0px -25px";
+  },300);
 });
 
-var mapTableType = function (convert) {
-  if (convert === 'warm') {return 'warmup';}
-  else if (convert === 'run') {return 'interval';}
-  else if (convert === 'recover') {return 'recovery';}
-  else if (convert === 'rest') {return 'rest';}
-  else if (convert === 'cool') {return 'cooldown';}
-  else if (convert === 'other') {return 'other';}
-};
-
-var mapTableDuration = function (convert) {
-  if (convert.indexOf(' min:sec') != -1) {
-    var durationVal = convert.substring(convert.indexOf('-') + 2, convert.lastIndexOf(' '));
-    return {durationType: 'time', durationVal: durationVal};
-  }
-  else if ((convert.indexOf(' km') != -1)||((convert.indexOf(' m') != -1))) {
-    var durationVal = convert.substring(convert.indexOf('-') + 2, convert.lastIndexOf(' '));
-    if (convert.indexOf(' km') != -1) {
-      return {durationType: 'distance', durationVal: durationVal, durationUnits: 'kilometer'};
-    }
-    else if (convert.indexOf(' mi') != -1) {
-      return {durationType: 'distance', durationVal: durationVal, durationUnits: 'mile'}; 
-    }
-    else {
-      return {durationType: 'distance', durationVal: durationVal, durationUnits: 'meter'};
-    }
-  }
-  else if (convert.indexOf(' Lap Button Press') != -1) {
-    return {durationType: 'lap.button'};
-  }
-  else if (convert.indexOf(' Calories') != -1) {
-    var durationVal = convert.substring(convert.indexOf('-') + 2, convert.lastIndexOf(' '));
-    return {durationType: 'calories', durationVal: durationVal};
-  }
-  else if (convert.indexOf(' bpm') != -1) {
-    var durationVal = convert.substring(convert.indexOf('-') + 8, convert.lastIndexOf(' '));
-    if (convert.indexOf(' Above ') != -1) {
-      return {durationType: 'heart.rate.zone', durationVal: durationVal, durationUnits: 'gt'};
-    }
-    else {
-      return {durationType: 'heart.rate.zone', durationVal: durationVal, durationUnits: 'lt'};
-    }
-  }
-};
 
 
 var arrrangeWorkout = function (savedHtmlArray) {
@@ -179,7 +149,9 @@ var arrrangeWorkout = function (savedHtmlArray) {
     type = mapTableType(type);
     var duration = savedHtmlArray[0].substring(durations[i]+20, durations[i]+50);
     duration = duration.substring(0, duration.lastIndexOf('/')-1);
+    // console.log(duration);
     duration = mapTableDuration(duration);
+    // console.log(duration);
     // console.log(type, duration);
     if (counter < stepsNumberInRepeat.length && i >= stepsNumberInRepeat[counter].firstIndex && i <= (stepsNumberInRepeat[counter].firstIndex+stepsNumberInRepeat[counter].len-1)) {
       stepsArray.push({stepType: type, stepDuration: duration});
@@ -198,7 +170,16 @@ var arrrangeWorkout = function (savedHtmlArray) {
       stepsArray = [];
     }
   }
-  workoutFlowArray.push({workoutName: savedHtmlArray[savedHtmlArray.length-1]});
+  workoutFlowArray.push({workoutName: savedHtmlArray[savedHtmlArray.length-2]});
+  if (savedHtmlArray[savedHtmlArray.length-1][0] != null) {
+    workoutFlowArray.push({workoutType: 'running'});
+  }
+  else if (savedHtmlArray[savedHtmlArray.length-1][1] != null) {
+    workoutFlowArray.push({workoutType: 'cycling'});
+  }
+  else {
+    workoutFlowArray.push({workoutType: 'not-supported-yet'});
+  }
   // console.log(workoutFlowArray);
   // $.post( "localhost:8000/workouts", JSON.stringify(stepsArray));
   // console.log(workoutFlowArray);
@@ -347,7 +328,7 @@ var arrrangeWorkout = function (savedHtmlArray) {
 // };
 
 var executeCodeAndJquery = function (tab) {
-  // console.log('8')
+  // console.log('8');
   setTimeout(function(){chrome.tabs.executeScript(null, {file: "jquery-3.0.0.min.js"});},10);
   setTimeout(function(){chrome.tabs.executeScript(null, {file: "jquery_1113.js"});},20);
   setTimeout(function(){chrome.tabs.executeScript(null, {file: "simulate.js"});},30);
@@ -366,7 +347,7 @@ var executeCodeAndJquery = function (tab) {
 
 function onUpdated (tabId, changeInfo, tab2) {
   // console.log(tab2);
-  if (changeInfo.status === "complete" && tab2.url === "https://connect.garmin.com/modern/workout/create/running") {
+  if (changeInfo.status === "complete" && (tab2.url === "https://connect.garmin.com/modern/workout/create/running" || tab2.url === "https://connect.garmin.com/modern/workout/create/cycling")) {
     // console.log('hiiii');
     executeCodeAndJquery(tab2);
   }
@@ -406,6 +387,7 @@ function updatePage(tab){
 };
 
 $('body').on('click', '#btnLoad', function() {
+  var localWorkouFlow = JSON.parse(workoutFlow);
   // console.log('1');
   document.getElementById('btnLoad').style.display = 'none';
   document.getElementById('fileinput').style.display = 'none';
@@ -415,10 +397,16 @@ $('body').on('click', '#btnLoad', function() {
   chrome.tabs.getSelected(null, function(tab) {
     // console.log('3');
     if (tab.url.substring(0 ,34) === "https://connect.garmin.com/modern/") {
-      chrome.tabs.update({url: "https://connect.garmin.com/modern/workout/create/running"}, updatePage);
+      if (localWorkouFlow[localWorkouFlow.length-1].workoutType === 'running') {
+        chrome.tabs.update({url: "https://connect.garmin.com/modern/workout/create/running"}, updatePage);
+      }
+      else if (localWorkouFlow[localWorkouFlow.length-1].workoutType === 'cycling') {
+        chrome.tabs.update({url: "https://connect.garmin.com/modern/workout/create/cycling"}, updatePage);
+      }
       // console.log('4');
     }
     else {
+      // console.log('4');
       // chrome.tabs.getAllInWindow(function(tabs) {
       //   for (var i=0; i<tabs.length; i++) {
       //     if (tabs[i].url.substring(0,34) === "https://connect.garmin.com/modern/") {
@@ -433,7 +421,13 @@ $('body').on('click', '#btnLoad', function() {
       //     }
       //   }
         // if (i === tabs.length) {
-      chrome.tabs.create({url: "https://connect.garmin.com/modern/workout/create/running", active: false}, updatePage);
+      // console.log(localWorkouFlow);
+      if (localWorkouFlow[localWorkouFlow.length-1].workoutType === 'running') {
+        chrome.tabs.create({url: "https://connect.garmin.com/modern/workout/create/running", active: false}, updatePage);
+      }
+      else if (localWorkouFlow[localWorkouFlow.length-1].workoutType === 'cycling') {
+        chrome.tabs.create({url: "https://connect.garmin.com/modern/workout/create/cycling", active: false}, updatePage);
+      }
 
        // function (tab) {
        //  chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab2){        
