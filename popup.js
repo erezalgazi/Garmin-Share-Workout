@@ -30,11 +30,11 @@ document.getElementById('fileinput').addEventListener('change', function () {
     };
   }
   else if (file.name.indexOf('.json') === -1) {
-    console.log('dddd');
+    // console.log('dddd');
     $('#fileinput').val('');
     document.getElementById('btnLoad').style.display = "none";
     document.getElementById('only-json').style.display = "block";
-    document.getElementById('alerts-div').style.margin = "5px 0px -24px";
+    document.getElementById('alerts-div').style.margin = "5px 0px -25px";
   }
 });
 
@@ -61,7 +61,7 @@ chrome.tabs.query({active: true, windowId: chrome.windows.WINDOW_ID_CURRENT}, fu
       if (types[0][0] === null) {
         document.getElementById('btnShare').style.display = "none";
         document.getElementById('only-running').style.display = 'block';
-        document.getElementById('alerts-div').style.margin = '5px 0px -24px';
+        document.getElementById('alerts-div').style.margin = '5px 0px -25px';
       }
     });
     var workoutHackCode = "var data = []; data.push(document.getElementsByClassName('workout-summary')[0].innerHTML); ";
@@ -75,11 +75,12 @@ chrome.tabs.query({active: true, windowId: chrome.windows.WINDOW_ID_CURRENT}, fu
 
 $('body').on('click', '#btnShare', function() {
   var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(workoutFlowArray)); 
-  $('<a href="data:' + data +'" download = "' + workoutFlowArray[workoutFlowArray.length-1].workoutName + '.json" id="dl-id">download JSON</a>').appendTo('#dl');
+  // console.log(data);
+  $('<a href="data:' + data + '" download = "' + workoutFlowArray[workoutFlowArray.length-1].workoutName + '.json" id="dl-id">download JSON</a>').appendTo('#dl');
   document.getElementById('dl-id').click();
   document.getElementById('btnShare').style.display = 'none';
   document.getElementById('download-success').style.display = 'block';
-  document.getElementById('alerts-div').style.margin = "5px 0px -24px";
+  document.getElementById('alerts-div').style.margin = "5px 0px -25px";
 });
 
 var mapTableType = function (convert) {
@@ -128,7 +129,7 @@ var mapTableDuration = function (convert) {
 
 
 var arrrangeWorkout = function (savedHtmlArray) {
-  console.log(savedHtmlArray);
+  // console.log(savedHtmlArray);
   var stepsArray = [];
   var stepsNumberInRepeat = [];
   var count = 0;
@@ -143,7 +144,7 @@ var arrrangeWorkout = function (savedHtmlArray) {
     if (stepsNumberInRepeat[count-1].len>2) {
       document.getElementById('btnShare').style.display = "none";
       document.getElementById('more-than2-not-yet-supported').style.display = 'block';
-      document.getElementById('alerts-div').style.margin = '5px 0px -24px';
+      document.getElementById('alerts-div').style.margin = '5px 0px -25px';
     }
   }
   // this block collects all the indexes of all the steps types of the workout, including repeats
@@ -198,7 +199,7 @@ var arrrangeWorkout = function (savedHtmlArray) {
     }
   }
   workoutFlowArray.push({workoutName: savedHtmlArray[savedHtmlArray.length-1]});
-  console.log(workoutFlowArray);
+  // console.log(workoutFlowArray);
   // $.post( "localhost:8000/workouts", JSON.stringify(stepsArray));
   // console.log(workoutFlowArray);
 
@@ -372,10 +373,12 @@ function onUpdated (tabId, changeInfo, tab2) {
 
   else if (changeInfo.status === "complete" && (tab2.url.indexOf('signin')) != -1) {
     document.getElementById('loading').style.display = 'none';
+    document.getElementById('general-error').style.display = 'none';
     document.getElementById('redirecting').style.display = 'none';
-    document.getElementById('alerts-div').style.margin = '10px 0px 0px';
+    // document.getElementById('alerts-div').style.margin = '10px 0px 0px';
     document.getElementById('not-logged-in-error').style.display = 'block';
     // document.getElementById('not-logged-in-error').style.margin = '5px 0px 0px';
+    document.getElementById('alerts-div').style.margin = '9px 0px 0px';
     $('#redirect-to-login').click(function() {
       chrome.tabs.update(tab2.id, {active: true});
     });
@@ -408,7 +411,7 @@ $('body').on('click', '#btnLoad', function() {
   document.getElementById('fileinput').style.display = 'none';
   document.getElementById('loading').style.display = 'inline-block';
   document.getElementById('redirecting').style.display = 'inline-block';
-  document.getElementById('alerts-div').style.margin = '-5px 0px -14px';
+  document.getElementById('alerts-div').style.margin = '-10px 0px -9px';
   chrome.tabs.getSelected(null, function(tab) {
     // console.log('3');
     if (tab.url.substring(0 ,34) === "https://connect.garmin.com/modern/") {
@@ -451,10 +454,10 @@ $('body').on('click', '#btnLoad', function() {
       document.getElementById('loading').style.display = 'none';
       document.getElementById('redirecting').style.display = 'none';
       document.getElementById('general-error').style.display = 'block';
-      document.getElementById('alerts-div').style.margin = '10px 0px 0px';
+      document.getElementById('alerts-div').style.margin = '9px 0px 0px';
       $('#fileinput').val('');
     } 
-  }, 12000);
+  }, 13000);
 });
 
 

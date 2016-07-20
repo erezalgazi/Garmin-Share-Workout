@@ -6,9 +6,9 @@ body{
   /*background-color: #DEEEFC;*/
   position: relative;
   /*background-color: #CCCCFB;*/
-  /*background-color: #91A8D0;*/
+  background-color: #91A8D0;
   /*background-color: #D3DCEC;*/
-  background-color: #BDCBE3;
+  /*background-color: #BDCBE3;*/
 }
 
 body:after {
@@ -25,7 +25,7 @@ body:after {
   opacity: 0.14;
   z-index: -1;   
   background-repeat: no-repeat;
-  background-position:  0% 12%;
+  background-position:  0% 8%;
   background-size: cover;
   /*background-color: red;*/
 }
@@ -133,23 +133,26 @@ li 	{
 }
 
 #redirecting {
-	color: red;
+	color: #BC243C;
 	display: none;
 	margin-top: 10px;
 	margin-left: 7px;
-	margin-bottom: -5px;	
+	margin-bottom: -5px;
+	font-size: 1.27em;
 }
 
 #more-than2-not-yet-supported, #not-logged-in-error, #only-running, #general-error, #only-json {
-	color: red;
+	color: #BC243C;
 	display: none;
 	margin: 0px;
+	font-size: 1.27em;
 }
 
 #download-success {
 	color: green;
 	display: none;
 	margin: 0px;
+	font-size: 1.27em;
 }
 
 #alerts-div {

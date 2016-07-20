@@ -3,7 +3,7 @@
 
   "name": "Garmin Connect Share Workout",
   "description": "Share workouts between users in Garmin Connect",
-  "version": "1.0.0.4",
+  "version": "1.0.0.6",
 
   "browser_action": {
     "default_icon": "icon.png",

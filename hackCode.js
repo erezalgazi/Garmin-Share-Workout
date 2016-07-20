@@ -9,7 +9,7 @@
 // style="height: 140%; padding-top: 70px; padding-left: 50%;"
 var pageLoadedIndicator = false;
 var saveSuccess = false
-console.log('Hey You!');
+// console.log('Hey You!');
 if (window.innerWidth > 1100) {
   document.getElementsByClassName('header')[0].insertAdjacentHTML('afterbegin', '<span><img id="loading-workout" style="height: 90%; padding-left: 20%;" src="https://healthy.kaiserpermanente.org/consumernet/themes/html/consumernet/js/gensys-click2chat/img/ajax-loader.gif"><h4 id="successfulness" style="display:none; color:green; padding-top: 55px; padding-left: 17%;">Process complete!</h4><h5 id="failure" style="display:none; color:red; padding-top: 10px;">Looks like Garmin website is experiencing connectivity problems. Please try agian later.</h5></span>');
 }
@@ -25,7 +25,7 @@ else if (window.innerWidth <= 830 && window.innerWidth > 679) {
 else {
   document.getElementsByClassName('header')[0].insertAdjacentHTML('afterbegin', '<span><img id="loading-workout" style="height: 90%;" src="https://healthy.kaiserpermanente.org/consumernet/themes/html/consumernet/js/gensys-click2chat/img/ajax-loader.gif"><h5 id="successfulness" style="display:none; color:green; padding-top: 55px; margin-left: -15%;">Process complete!</h5><h5 id="failure" style="display:none; color:red; padding-top: 10px; padding-left: 50%;">Looks like Garmin website is <br> experiencing connectivity problems. <br>Please try agian later.</h5></span>');
 }
-console.log(workoutFlow);
+// console.log(workoutFlow);
 
 document.body.addEventListener('DOMNodeInserted', createWorkout);
 function createWorkout(e) {
@@ -104,16 +104,18 @@ function createWorkout(e) {
             }            
           }
         }
+        else{
+          //tbf drag and drop
+        }
       }
     }
 
-    // document.getElementById('save-workout').click();
     setTimeout(function() {
       document.getElementById('save-workout').click();
       setTimeout(function() {
         if ((document.getElementById('save-and-review').style.display === 'none') || (document.getElementsByClassName('inline-edit-trigger') === undefined)) {
           setTimeout(function() {
-            console.log('1');
+            // console.log('1');
             if (document.getElementsByClassName('inline-edit-trigger')) {
               document.getElementsByClassName('inline-edit-trigger')[0].click();
               document.getElementsByClassName('inline-edit-editable-text')[0].innerHTML = workoutFlow[workoutFlow.length-1].workoutName;
@@ -131,7 +133,7 @@ function createWorkout(e) {
           }, 4000);
         }
         else {
-          console.log('2');
+          // console.log('2');
           if (document.getElementsByClassName('inline-edit-trigger')) {
             document.getElementsByClassName('inline-edit-trigger')[0].click();
             document.getElementsByClassName('inline-edit-editable-text')[0].innerHTML = workoutFlow[workoutFlow.length-1].workoutName;
@@ -151,7 +153,7 @@ function createWorkout(e) {
     }, 50);
     setTimeout(function(){
       if ((saveSuccess === false) && (!((document.URL.substring(0 ,42) === "https://connect.garmin.com/modern/workout/") && (!(isNaN(Number(document.URL.substring(42,43)))))))) {
-        console.log('why');
+        // console.log('why');
         document.getElementById('loading-workout').style.display = 'none';
         document.getElementById('failure').style.display = 'inline-block';
         setTimeout(function() {document.getElementById('failure').style.display = 'none';}, 3000);
@@ -168,7 +170,7 @@ function createWorkout(e) {
     // document.getElementById('loading-workout').style.display = 'none';
     // document.getElementById('successfulness').style.display = 'inline-block';
     // document.getElementById('save-and-review').click();
-    console.log('bye');
+    // console.log('bye');
     pageLoadedIndicator = true;
     // console.log(document.getElementsByClassName('icon-pencil')[0]);
   }
@@ -186,7 +188,7 @@ function createWorkout(e) {
 setTimeout(function(){
   // console.log(pageLoadedIndicator);
   if ((pageLoadedIndicator === false) && (!((document.URL.substring(0 ,42) === "https://connect.garmin.com/modern/workout/") && (!(isNaN(Number(document.URL.substring(42,43)))))))) {
-    console.log('here');
+    // console.log('here');
     document.getElementById('loading-workout').style.display = 'none';
     document.getElementById('failure').style.display = 'inline-block';
     setTimeout(function() {document.getElementById('failure').style.display = 'none';}, 3000);
