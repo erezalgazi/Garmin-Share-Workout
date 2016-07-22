@@ -329,6 +329,7 @@ var arrrangeWorkout = function (savedHtmlArray) {
 
 var executeCodeAndJquery = function (tab) {
   // console.log('8');
+  // console.log(tab);
   setTimeout(function(){chrome.tabs.executeScript(null, {file: "jquery-3.0.0.min.js"});},10);
   setTimeout(function(){chrome.tabs.executeScript(null, {file: "jquery_1113.js"});},20);
   setTimeout(function(){chrome.tabs.executeScript(null, {file: "simulate.js"});},30);
