@@ -3,7 +3,7 @@
 
   "name": "Garmin Connect Share Workout",
   "description": "Share workouts between users in Garmin Connect",
-  "version": "1.0.0.8",
+  "version": "1.0.0.10",
 
   "browser_action": {
     "default_icon": "icon.png",
@@ -13,14 +13,8 @@
 
     "permissions": [
       "activeTab",
-      // "https://ajax.googleapis.com/",
-      // "tabs",
-      // "notifications",
-      // "background",
-      // "http://*/",
+      "tabs",
       "https://connect.garmin.com/modern/"
-      // "https://*/",
-      // "chrome://extensions/"
     ]
 }
 

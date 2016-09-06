@@ -53,6 +53,12 @@ document.getElementById('goto-workouts').addEventListener('click', function(){
   });
 });
 
+document.getElementById('goto-settings').addEventListener('click', function () {
+  chrome.tabs.getSelected(null, function(tab) {
+    chrome.tabs.update(tab.id, {url:"https://connect.garmin.com/modern/settings"});
+  });
+});
+
 //this events shows the share button when on a legitimate workout, and extract all the data from this workout to be put in a file
 chrome.tabs.query({active: true, windowId: chrome.windows.WINDOW_ID_CURRENT}, function(tabs) {
   if ((tabs[0].url.substring(0 ,42) === "https://connect.garmin.com/modern/workout/") && (!(isNaN(Number(tabs[0].url.substring(42,43)))))) {
@@ -70,13 +76,19 @@ chrome.tabs.query({active: true, windowId: chrome.windows.WINDOW_ID_CURRENT}, fu
     var workoutHackCode = "var data = []; data.push(document.getElementsByClassName('workout-summary')[0].innerHTML); ";
     workoutHackCode += "for (var k=0; k<document.getElementsByClassName('block-repeat').length; k++) {data.push(document.getElementsByClassName('block-repeat')[k].innerHTML);} ";
     workoutHackCode += "data.push(document.getElementsByClassName('inline-edit-target')[0].innerHTML); ";
+    workoutHackCode += "data.push(document.getElementById('duration-label').innerHTML); ";
     workoutHackCode += "var workoutTypes = []; workoutTypes.push(document.getElementsByClassName('icon-activity-running')[0]); workoutTypes.push(document.getElementsByClassName('icon-activity-cycling')[0]); ";
     workoutHackCode += "data.push(workoutTypes); data";
     chrome.tabs.executeScript(null, {code: workoutHackCode}, function(results) {
-      // console.log(results);
+      console.log(results, results[0][results[0].length-2]);
       if ((results[0][results[0].length-1][0] === null) && (results[0][results[0].length-1][1] === null)) {
         document.getElementById('btnShare').style.display = "none";
         document.getElementById('only-running').style.display = 'block';
+        document.getElementById('alerts-div').style.margin = '5px 0px -25px';        
+      }
+      if (results[0][results[0].length-2] != 'Estimated Duration') {
+        document.getElementById('btnShare').style.display = "none";
+        document.getElementById('only-english').style.display = 'block';
         document.getElementById('alerts-div').style.margin = '5px 0px -25px';        
       }
       arrrangeWorkout(results[0]);
@@ -99,7 +111,7 @@ $('body').on('click', '#btnShare', function() {
 
 
 var arrrangeWorkout = function (savedHtmlArray) {
-  // console.log(savedHtmlArray);
+  console.log(savedHtmlArray);
   var stepsArray = [];
   var stepsNumberInRepeat = [];
   var count = 0;
@@ -143,20 +155,20 @@ var arrrangeWorkout = function (savedHtmlArray) {
   }
   // console.log('types: ', indices, 'durations: ', durations, 'repeats: ', repeats, 'steps each repeat: ', stepsNumberInRepeat);
   for (var i=0; i<indices.length; i++) {
-    var type = savedHtmlArray[0].substring(indices[i]+35, indices[i]+43);
+    var type = savedHtmlArray[0].substring(indices[i] + 35, indices[i] + 43);
     // console.log(type);
     type = type.substring(0, type.lastIndexOf('"'));
     type = mapTableType(type);
-    var duration = savedHtmlArray[0].substring(durations[i]+20, durations[i]+50);
-    duration = duration.substring(0, duration.lastIndexOf('/')-1);
+    var duration = savedHtmlArray[0].substring(durations[i] + 20, durations[i] + 50);
     // console.log(duration);
+    // duration = duration.substring(0, duration.lastIndexOf('/')-1);
     duration = mapTableDuration(duration);
     // console.log(duration);
     // console.log(type, duration);
     if (counter < stepsNumberInRepeat.length && i >= stepsNumberInRepeat[counter].firstIndex && i <= (stepsNumberInRepeat[counter].firstIndex+stepsNumberInRepeat[counter].len-1)) {
       stepsArray.push({stepType: type, stepDuration: duration});
       if (i === stepsNumberInRepeat[counter].firstIndex+stepsNumberInRepeat[counter].len-1) {
-        var repeat = savedHtmlArray[0].substring(repeats[counter]+135, repeats[counter]+138);
+        var repeat = savedHtmlArray[0].substring(repeats[counter] + 135, repeats[counter] + 138);
         repeat = repeat.substring(0, repeat.lastIndexOf('<'));
         // console.log(repeat);
         workoutFlowArray.push({steps: stepsArray, repeat: Number(repeat)});
@@ -170,7 +182,7 @@ var arrrangeWorkout = function (savedHtmlArray) {
       stepsArray = [];
     }
   }
-  workoutFlowArray.push({workoutName: savedHtmlArray[savedHtmlArray.length-2]});
+  workoutFlowArray.push({workoutName: savedHtmlArray[savedHtmlArray.length-3]});
   if (savedHtmlArray[savedHtmlArray.length-1][0] != null) {
     workoutFlowArray.push({workoutType: 'running'});
   }

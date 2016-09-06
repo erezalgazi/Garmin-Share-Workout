@@ -141,7 +141,7 @@ li 	{
 	font-size: 1.27em;
 }
 
-#more-than2-not-yet-supported, #not-logged-in-error, #only-running, #general-error, #only-json {
+#more-than2-not-yet-supported, #not-logged-in-error, #only-running, #only-english, #general-error, #only-json {
 	color: #BC243C;
 	display: none;
 	margin: 0px;
